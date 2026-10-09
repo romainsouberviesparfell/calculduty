@@ -309,10 +309,14 @@ ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;f
           <summary>Options du duty</summary>
           <div class="body">
             <div class="row">
-              <div class="field"><label for="i_posafter">Positioning après le dernier secteur (min)</label><input id="i_posafter" type="number" min="0" step="5" value="0"></div>
               <div class="field"><label for="i_standby">Airport standby avant le report (min)</label><input id="i_standby" type="number" min="0" step="5" value="0"></div>
+              <div class="field"><span class="lbl">Positioning avant le 1er secteur</span><div class="pk" data-pk="i_posbefore" data-kind="dur" data-label="Positioning avant le 1er secteur"></div><input type="hidden" id="i_posbefore" value="00:00"></div>
             </div>
-            <span class="hint">Le positioning avant le premier secteur est déjà dans le FDP et ne compte pas comme secteur.</span>
+            <div class="field" id="posDepRow" hidden><label for="i_posdep">Aéroport de départ du positioning (OACI ou IATA)</label><input id="i_posdep" data-ac="1" type="text" maxlength="40" placeholder="LSGG, GVA ou Genève" autocomplete="off" spellcheck="false"><span class="hint" id="i_posdep_info"></span></div>
+            <div class="row">
+              <div class="field"><label for="i_posafter">Positioning après le dernier secteur (min)</label><input id="i_posafter" type="number" min="0" step="5" value="0"></div>
+            </div>
+            <span class="hint">Positioning avant : durée entre le report pour le positioning et le check-in normal du 1er vol opéré. Il fait partie du FDP mais ne compte pas comme secteur. Seul un positioning demandé par la compagnie compte : le trajet de chez toi au lieu de report n'est pas du duty.</span>
           </div>
         </details>
         <div id="easaOpts">
@@ -372,7 +376,7 @@ ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;f
     <section class="results" id="res" aria-live="polite"></section>
   </div>
 
-  <p class="foot"><strong>Version 33 · 09.10.2026.</strong> Outil personnel d'aide à la planification, non officiel : il n'est ni produit ni validé par Sparfell. OE : OM-A Sparfell, chapitre 7 (pages 7-1 à 7-19, annexe I incluse). 9H : OM-A Sparfell Malta, chapitre 7 (rév. 10 pour les tableaux). LX : OM-A Sparfell Luxembourg, chapitre 7 (rév. 1 du 05.05.2026). Il ne remplace ni l'OM-A à jour, ni le système de planification de l'opérateur, ni l'avis du NPFO.</p>
+  <p class="foot"><strong>Version 35 · 09.10.2026.</strong> Outil personnel d'aide à la planification, non officiel : il n'est ni produit ni validé par Sparfell. OE : OM-A Sparfell, chapitre 7 (pages 7-1 à 7-19, annexe I incluse). 9H : OM-A Sparfell Malta, chapitre 7 (rév. 10 pour les tableaux). LX : OM-A Sparfell Luxembourg, chapitre 7 (rév. 1 du 05.05.2026). Il ne remplace ni l'OM-A à jour, ni le système de planification de l'opérateur, ni l'avis du NPFO.</p>
   <p class="foot" style="margin-top:-18px">Créé par Romain Soubervie, avec l'aide de Claude, pour Sparfell.</p>
 </main>
 
@@ -578,8 +582,8 @@ var NCCT=band([['0600','1659',[960,930,900,870,840]],['1700','0559',[900,870,840
 
 var NCCT9=band([['0600','1359',[840,810,780,750,720]],['1400','1459',[810,780,750,720,690]],['1500','1559',[780,750,720,690,660]],
   ['1600','1659',[750,720,690,660,630]],['1700','0459',[720,690,660,630,600]],['0500','0559',[780,750,720,690,660]]]);
-var RC={table:'7.1.8',wocl:'7.1.4',ext:'7.1.8.1',split:'7.1.8.2',rest:'7.1.9',sleep:'7.1.9.2',tz:'7.1.9.3',weekly:'7.1.9.4',reduced:'7.1.9.5',ifr:'7.1.10',discr:'7.1.11',standby:'7.1.12.1'};
-var RN={table:'I/7.2.5',wocl:'I/7.2.1',ext:'I/7.2.6',split:'I/7.2.7',rest:'I/7.2.9',sleep:'I/7.2.9',tz:'I/7.2.9',weekly:'I/7.2.9',reduced:'I/7.2.10',ifr:'I/7.2.11',discr:'I/7.2.12',standby:'7.1.11'};
+var RC={table:'7.1.8',wocl:'7.1.4',ext:'7.1.8.1',split:'7.1.8.2',rest:'7.1.9',sleep:'7.1.9.2',tz:'7.1.9.3',weekly:'7.1.9.4',reduced:'7.1.9.5',ifr:'7.1.10',discr:'7.1.11',standby:'7.1.12.1',pos:'7.1.8.3'};
+var RN={table:'I/7.2.5',wocl:'I/7.2.1',ext:'I/7.2.6',split:'I/7.2.7',rest:'I/7.2.9',sleep:'I/7.2.9',tz:'I/7.2.9',weekly:'I/7.2.9',reduced:'I/7.2.10',ifr:'I/7.2.11',discr:'I/7.2.12',standby:'7.1.11',pos:'I/7.2.8'};
 var RC9=Object.assign({},RC,{tz:'7.1.9.5',weekly:'7.1.9.3',reduced:'7.1.9.4'});
 var CATTL=band([['0700','1159',[840,795,750,705,660,615,570,540]],['1200','1359',[810,765,720,675,630,585,540,540]],['1400','1559',[780,735,690,645,600,555,540,540]],
   ['1600','1759',[750,705,660,615,570,540,540,540]],['1800','0359',[720,675,630,585,540,540,540,540]],['0400','0459',[750,705,660,615,570,540,540,540]],
@@ -603,6 +607,8 @@ function computeOE(s,p){
   var tableMax=trow.v[ix];
   var plan=s.fdp>0?s.fdp:tableMax;
   step('OM-A '+R.table+' table','Check-in '+fm(modDay(startUTC,0))+'Z, soit '+fm(startM)+' LT ('+offLabel(s.rep)+', la table est en heure locale), '+s.sectors+' atterrissage(s) : '+fm(tableMax)+'.');
+  var posB=s.posBefore||0;
+  if(posB>0)step('OM-A '+R.pos,'Positioning de '+fm(posB)+' avant le premier secteur : inclus dans le FDP à partir du report ('+fm(modDay(startUTC,0))+'Z'+(s.posDep?', '+s.posDep.toUpperCase():'')+'), ne compte pas comme secteur.');
   /* fuseau du WOCL */
   var dBase=tzDiff(s.rep,s.base);
   var woclOff=(dBase<=3||s.hBase<48)?s.base:s.rep;
@@ -818,12 +824,13 @@ function computeOE(s,p){
     V.facts.push({k:'Repos hebdomadaire au plus tôt',v:'fin '+fz(wk.earliestEnd),s:'36 h dont 2 nuits locales si commencé après ce duty'});
   }
   V.timeline=[
-    {k:'Check-in',t:zt(startUTC),d:zd(startUTC),sub:'= '+fm(startM)+' LT ('+offLabel(s.rep)+'), valeur lue dans la table OM-A',gap:'FDP '+fm(plan)},
+    {k:posB>0?'Report pour le positioning':'Check-in',t:zt(startUTC),d:zd(startUTC),sub:'= '+fm(startM)+' LT ('+offLabel(s.rep)+'), valeur lue dans la table OM-A',gap:posB>0?'positioning '+fm(posB)+' (dans le FDP, pas un secteur)':'FDP '+fm(plan)},
     {k:'Block on, fin de FDP',t:zt(startUTC+plan*60000),d:zd(startUTC+plan*60000),gap:'check-out '+post+' min'+(pos?' + positioning '+pos+' min':'')},
     {k:'Fin de duty',t:zt(dutyEnd),d:zd(dutyEnd),sub:'duty period de '+fm(dutyMin),gap:'repos minimum '+fm(rest)+(away?' hors base':' à la base')},
     {k:'Prochain report au plus tôt',t:zt(next),d:zd(next),sub:'check-in',gap:'+ '+(p.pre==null?60:p.pre)+' min de check-in'},
     {k:'Premier block off possible',t:zt(next+(p.pre==null?60:p.pre)*60000),d:zd(next+(p.pre==null?60:p.pre)*60000),sub:'premier décollage'}
   ];
+  if(posB>0)V.timeline.splice(1,0,{k:'Check-in du 1er vol opéré',t:zt(startUTC+posB*60000),d:zd(startUTC+posB*60000),gap:'suite du FDP, '+fm(Math.max(0,plan-posB))});
   V.rows=[
     {key:'base',label:'Base · table OM-A',val:fm(tableMax),src:R.table+', report '+fm(startM)+' LT'},
     {key:'rule',label:'Base · règle détaillée',val:fm(ruleMax),src:'calculée pour ce FDP prévu de '+fm(plan)},
@@ -957,7 +964,8 @@ function hhmm(id){var t=$(id).value;return t?(+t.split(':')[0])*60+(+t.split(':'
 function readS(){
   var off=$('i_off').value||'2026-10-09T05:30',pre=readP().pre;
   var om=/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)$/.exec(off);
-  var ci=new Date(Date.UTC(+om[1],+om[2]-1,+om[3],+om[4],+om[5])-pre*60000);
+  var posB=hhmm('i_posbefore');
+  var ci=new Date(Date.UTC(+om[1],+om[2]-1,+om[3],+om[4],+om[5])-(pre+posB)*60000);
   var P=function(n){return (n<10?'0':'')+n;};
   var start=ci.getUTCFullYear()+'-'+P(ci.getUTCMonth()+1)+'-'+P(ci.getUTCDate())+'T'+P(ci.getUTCHours())+':'+P(ci.getUTCMinutes());
   var startZ=ci.getUTCHours()*60+ci.getUTCMinutes();
@@ -972,7 +980,7 @@ function readS(){
     splitNight:$('i_splitnight').checked,splitDur:(((hhmm('i_sboff')-hhmm('i_sbon'))%1440)+1440)%1440,secAfter:Math.max(0,Math.floor(num('i_secafter'))||0),splitSuit:$('i_splitsuit').checked,
     ifrType:$('i_ifrtype').value,ifrRest:num('i_ifrrest'),pilots:3,
     aug:1,cls:+$('i_cls').value,long:$('i_long').checked,
-    posAfter:num('i_posafter'),standby:num('i_standby'),retTz:$('i_rettz').checked,
+    posAfter:num('i_posafter'),posBefore:posB,posDep:$('i_posdep').value.trim(),standby:num('i_standby'),retTz:$('i_rettz').checked,
     night:$('i_night').checked,frm:$('i_frm').checked,restLoc:val('loc'),early:$('i_early').checked,
     endRot:$('i_endrot').checked,rotDiff:num('i_rotdiff'),rotEl:num('i_rotel'),
     d7:num('i_d7'),d28:num('i_d28'),b28:num('i_b28'),by:num('i_by'),dy:num('i_dy'),blockThis:num('i_bt'),wk:$('i_wk').value
@@ -997,13 +1005,14 @@ function sync(s){
   var home=s.restLoc==='home';
   $('nextEarlyRow').hidden=oe||!home;$('endRotRow').hidden=oe||!home;$('rotbox').hidden=oe||!(home&&$('i_endrot').checked);$('restSet').hidden=$('retTzRow').hidden&&$('nextEarlyRow').hidden&&$('endRotRow').hidden;
   $('c_d7').hidden=!cat;$('c_d28').hidden=!cat;$('c_b28').hidden=!cat;$('c_dy').hidden=cat&&isOE;
+  $('posDepRow').hidden=!(s.posBefore>0);
   $('secAfterField').hidden=s.aoc==='LX';$('splitNightRow').hidden=s.aoc!=='LX';
   return s;
 }
 function render(){
   var s=sync(readS()),p=readP(),F=window.FTL,fm=F.fm;
   var V=F.compute(s,p);
-  $('fdpHint').textContent=s.fdp>0?'Check-in calculé : '+s.start.split('T')[1]+' Z (block off − '+p.pre+' min). FDP : '+fm(s.fdp)+', du check-in au block on. Check-out : '+p.post+' min après le block on.':'Indique la date et l\'heure d\'arrivée du dernier vol (après le check-in).';
+  $('fdpHint').textContent=s.fdp>0?'Check-in calculé : '+s.start.split('T')[1]+' Z (block off − '+p.pre+' min'+(s.posBefore?' − positioning '+fm(s.posBefore):'')+'). FDP : '+fm(s.fdp)+', du check-in au block on. Check-out : '+p.post+' min après le block on.':'Indique la date et l\'heure d\'arrivée du dernier vol (après le check-in).';
   $('splitHint').textContent='Pause : '+fm(s.splitDur)+' entre le block on et le block off (fuel stop non compté, il fait partie du FDP).'+(s.aoc==='LX'?'':' Atterrissages avant la pause : '+Math.max(0,s.sectors-s.secAfter)+'.');
   var h='';
   var H=V.hero;
@@ -1205,6 +1214,14 @@ function autoTz(){
     info.textContent=r[2]+' · '+A.tzName(r)+' · '+(o==null?'':offTxt(o));
     if(o!=null){$(c[1]).value=o;if(c[0]==='i_baseicao')$('i_ref').value=o;}
   });
+  /* Avec un positioning avant le 1er secteur, le report a lieu à l'aéroport de départ du positioning. */
+  var pv=$('i_posdep').value.trim(),pinfo=$('i_posdep_info');
+  if(!(s.posBefore>0)||!pv){pinfo.textContent=s.posBefore>0?'Sans aéroport, l\'heure locale du report reste celle du départ du 1er vol.':'';return;}
+  var pr=A.find(pv);
+  if(!pr){pinfo.textContent=A.search(pv).length?'Choisis un aéroport dans la liste.':(pv.length>=3?'Aucun aéroport trouvé.':'');return;}
+  var po=A.offsetAt(pr,startMs);
+  pinfo.textContent=pr[2]+' · '+A.tzName(pr)+' · '+(po==null?'':offTxt(po))+' : heure locale du report';
+  if(po!=null)$('i_rep').value=po;
 }
 /* Remise à zéro : toutes les saisies reviennent à leur valeur initiale (l'AOC et les paramètres de profil restent). */
 var initial=[];
