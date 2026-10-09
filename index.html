@@ -367,7 +367,7 @@ ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;f
     <section class="results" id="res" aria-live="polite"></section>
   </div>
 
-  <p class="foot"><strong>Version du 08.10.2026, 18:30.</strong> Outil personnel d'aide à la planification, non officiel : il n'est ni produit ni validé par Sparfell. OE : OM-A Sparfell, chapitre 7 (pages 7-1 à 7-19, annexe I incluse). 9H : OM-A Sparfell Malta, chapitre 7 (rév. 10 pour les tableaux). LX : OM-A Sparfell Luxembourg, chapitre 7 (rév. 1 du 05.05.2026). Il ne remplace ni l'OM-A à jour, ni le système de planification de l'opérateur, ni l'avis du NPFO.</p>
+  <p class="foot"><strong>Version du 09.10.2026, 11:30.</strong> Outil personnel d'aide à la planification, non officiel : il n'est ni produit ni validé par Sparfell. OE : OM-A Sparfell, chapitre 7 (pages 7-1 à 7-19, annexe I incluse). 9H : OM-A Sparfell Malta, chapitre 7 (rév. 10 pour les tableaux). LX : OM-A Sparfell Luxembourg, chapitre 7 (rév. 1 du 05.05.2026). Il ne remplace ni l'OM-A à jour, ni le système de planification de l'opérateur, ni l'avis du NPFO.</p>
 </main>
 
 <script>
@@ -735,6 +735,7 @@ function computeOE(s,p){
   if(!cat&&standby>0)al('warn','Le standby n\'est traité que dans la partie commerciale de l\'OM-A.');
   if(cat&&dBase>3)al('info','Report à plus de 3 fuseaux de la base : l\'OM-A ne définit pas de tables d\'acclimatation, seul le fuseau du WOCL change.');
   if(s.sectors>=6&&cat)al('info','À partir de 6 secteurs la réduction de secteurs est plafonnée à 2 h.');
+  if(rest<=540)al('warn','Repos minimum de '+fm(rest)+' : l\'OM-A ('+R.sleep+') impose une sleep opportunity de 8 h, trajets et check-out compris. Compte le transport de l\'équipage vers l\'hôtel et le retour : si le trajet est long, le repos doit être prolongé.');
   /* flags */
   var endLocal=modDay(startUTC+plan*60000,woclOff);
   if(enc>0)V.flags.push('WOCL touché');
