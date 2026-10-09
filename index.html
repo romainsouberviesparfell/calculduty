@@ -64,6 +64,18 @@ h1{font-family:var(--ff-head);font-size:clamp(1.5rem,4.5vw,2.1rem);line-height:1
 form.inputs{grid-column:1;grid-row:2/span 12}
 .results>.panel:not(:first-child){grid-column:2}
 }
+/* Téléphone et fenêtre étroite : bandeau de résultat compact, fixé en haut, au-dessus de la saisie. */
+@media (max-width:959.98px){
+.results{display:contents !important}
+.results>.panel:first-child{order:-1;position:sticky;top:0;z-index:20;padding:8px;box-shadow:0 6px 14px -8px rgba(0,0,0,.35)}
+.results>.panel:first-child .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.results>.panel:first-child .stat{padding:6px 8px;gap:2px;border-radius:8px}
+.results>.panel:first-child .stat.plan{border-width:1px}
+.results>.panel:first-child .stat .k{font-size:10px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.results>.panel:first-child .stat .big{font-size:clamp(1rem,24cqw,1.7rem)}
+.results>.panel:first-child .stat .sub,.results>.panel:first-child .basis,.results>.panel:first-child .flags{display:none}
+:root{scroll-padding-top:90px}
+}
 form.inputs{background:var(--surface);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column}
 fieldset{border:0;margin:0;padding:18px;min-width:0;display:flex;flex-direction:column;gap:14px}
 fieldset+fieldset{border-top:1px solid var(--line)}
@@ -123,6 +135,10 @@ html{scroll-padding-top:230px}
 details.prof{border:1px dashed var(--line);border-radius:8px;padding:10px 12px}
 details.prof summary{cursor:pointer;font-size:13px;font-weight:500}
 details.prof .body{display:flex;flex-direction:column;gap:12px;padding-top:12px}
+.optgrp{display:flex;flex-direction:column;gap:8px}
+.optgrp+.optgrp{border-top:1px solid var(--line);padding-top:12px}
+.optgrp .gt{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .banner{border-radius:8px;padding:10px 12px;font-size:13px}
 .banner.ok{background:var(--good-bg);color:var(--good)}
 .banner.warn{background:var(--warn-bg);color:var(--warn)}
@@ -308,15 +324,21 @@ ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;f
         <details class="prof" id="oeOpts">
           <summary>Options du duty</summary>
           <div class="body">
-            <div class="row">
-              <div class="field"><label for="i_standby">Airport standby avant le report (min)</label><input id="i_standby" type="number" min="0" step="5" value="0"></div>
-              <div class="field"><span class="lbl">Positioning avant le 1er secteur</span><div class="pk" data-pk="i_posbefore" data-kind="dur" data-label="Positioning avant le 1er secteur"></div><input type="hidden" id="i_posbefore" value="00:00"></div>
+            <div class="optgrp">
+              <span class="gt">Avant le premier vol</span>
+              <div class="row2">
+                <div class="field"><span class="lbl">Airport standby</span><div class="pk" data-pk="i_standby" data-kind="dur" data-label="Airport standby avant le report"></div><input type="hidden" id="i_standby" value="00:00"></div>
+                <div class="field"><span class="lbl">Positioning</span><div class="pk" data-pk="i_posbefore" data-kind="dur" data-label="Positioning avant le 1er secteur"></div><input type="hidden" id="i_posbefore" value="00:00"></div>
+              </div>
+              <div class="field" id="posDepRow" hidden><label for="i_posdep">Aéroport de départ du positioning</label><input id="i_posdep" data-ac="1" type="text" maxlength="40" placeholder="LSGG, GVA ou Genève" autocomplete="off" spellcheck="false"><span class="hint" id="i_posdep_info"></span></div>
+              <span class="hint">Positioning : du report pour le positioning jusqu'au check-in du 1er vol opéré. Il compte dans le FDP, pas comme secteur. Seul un positioning demandé par la compagnie compte, pas le trajet depuis chez toi.</span>
             </div>
-            <div class="field" id="posDepRow" hidden><label for="i_posdep">Aéroport de départ du positioning (OACI ou IATA)</label><input id="i_posdep" data-ac="1" type="text" maxlength="40" placeholder="LSGG, GVA ou Genève" autocomplete="off" spellcheck="false"><span class="hint" id="i_posdep_info"></span></div>
-            <div class="row">
-              <div class="field"><label for="i_posafter">Positioning après le dernier secteur (min)</label><input id="i_posafter" type="number" min="0" step="5" value="0"></div>
+            <div class="optgrp">
+              <span class="gt">Après le dernier vol</span>
+              <div class="row2">
+                <div class="field"><span class="lbl">Positioning</span><div class="pk" data-pk="i_posafter" data-kind="dur" data-label="Positioning après le dernier secteur"></div><input type="hidden" id="i_posafter" value="00:00"></div>
+              </div>
             </div>
-            <span class="hint">Positioning avant : durée entre le report pour le positioning et le check-in normal du 1er vol opéré. Il fait partie du FDP mais ne compte pas comme secteur. Seul un positioning demandé par la compagnie compte : le trajet de chez toi au lieu de report n'est pas du duty.</span>
           </div>
         </details>
         <div id="easaOpts">
@@ -376,7 +398,7 @@ ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;f
     <section class="results" id="res" aria-live="polite"></section>
   </div>
 
-  <p class="foot"><strong>Version 35 · 09.10.2026.</strong> Outil personnel d'aide à la planification, non officiel : il n'est ni produit ni validé par Sparfell. OE : OM-A Sparfell, chapitre 7 (pages 7-1 à 7-19, annexe I incluse). 9H : OM-A Sparfell Malta, chapitre 7 (rév. 10 pour les tableaux). LX : OM-A Sparfell Luxembourg, chapitre 7 (rév. 1 du 05.05.2026). Il ne remplace ni l'OM-A à jour, ni le système de planification de l'opérateur, ni l'avis du NPFO.</p>
+  <p class="foot"><strong>Version 37 · 09.10.2026.</strong> Outil personnel d'aide à la planification, non officiel : il n'est ni produit ni validé par Sparfell. OE : OM-A Sparfell, chapitre 7 (pages 7-1 à 7-19, annexe I incluse). 9H : OM-A Sparfell Malta, chapitre 7 (rév. 10 pour les tableaux). LX : OM-A Sparfell Luxembourg, chapitre 7 (rév. 1 du 05.05.2026). Il ne remplace ni l'OM-A à jour, ni le système de planification de l'opérateur, ni l'avis du NPFO.</p>
   <p class="foot" style="margin-top:-18px">Créé par Romain Soubervie, avec l'aide de Claude, pour Sparfell.</p>
 </main>
 
@@ -980,7 +1002,7 @@ function readS(){
     splitNight:$('i_splitnight').checked,splitDur:(((hhmm('i_sboff')-hhmm('i_sbon'))%1440)+1440)%1440,secAfter:Math.max(0,Math.floor(num('i_secafter'))||0),splitSuit:$('i_splitsuit').checked,
     ifrType:$('i_ifrtype').value,ifrRest:num('i_ifrrest'),pilots:3,
     aug:1,cls:+$('i_cls').value,long:$('i_long').checked,
-    posAfter:num('i_posafter'),posBefore:posB,posDep:$('i_posdep').value.trim(),standby:num('i_standby'),retTz:$('i_rettz').checked,
+    posAfter:hhmm('i_posafter'),posBefore:posB,posDep:$('i_posdep').value.trim(),standby:hhmm('i_standby'),retTz:$('i_rettz').checked,
     night:$('i_night').checked,frm:$('i_frm').checked,restLoc:val('loc'),early:$('i_early').checked,
     endRot:$('i_endrot').checked,rotDiff:num('i_rotdiff'),rotEl:num('i_rotel'),
     d7:num('i_d7'),d28:num('i_d28'),b28:num('i_b28'),by:num('i_by'),dy:num('i_dy'),blockThis:num('i_bt'),wk:$('i_wk').value
