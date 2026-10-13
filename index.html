@@ -400,7 +400,7 @@ ul.plain{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;f
     <section class="results" id="res" aria-live="polite"></section>
   </div>
 
-  <p class="foot"><strong>Version 39 · 13.10.2026.</strong> Outil personnel d'aide à la planification, non officiel : il n'est ni produit ni validé par Sparfell. OE : OM-A Sparfell, chapitre 7 (pages 7-1 à 7-19, annexe I incluse). 9H : OM-A Sparfell Malta, chapitre 7 (rév. 10 pour les tableaux). LX : OM-A Sparfell Luxembourg, chapitre 7 (rév. 1 du 05.05.2026). T7 : OM-A Sparfell Luftfahrt S.r.l., chapitre 7 (rév. 2 du 28.11.2025). Il ne remplace ni l'OM-A à jour, ni le système de planification de l'opérateur, ni l'avis du NPFO.</p>
+  <p class="foot"><strong>Version 40 · 13.10.2026.</strong> Outil personnel d'aide à la planification, non officiel : il n'est ni produit ni validé par Sparfell. OE : OM-A Sparfell, chapitre 7 (pages 7-1 à 7-19, annexe I incluse). 9H : OM-A Sparfell Malta, chapitre 7 (rév. 10 pour les tableaux). LX : OM-A Sparfell Luxembourg, chapitre 7 (rév. 1 du 05.05.2026). T7 : OM-A Sparfell Luftfahrt S.r.l., chapitre 7 (rév. 2 du 28.11.2025). Il ne remplace ni l'OM-A à jour, ni le système de planification de l'opérateur, ni l'avis du NPFO.</p>
   <p class="foot" style="margin-top:-18px">Créé par Romain Soubervie, avec l'aide de Claude, pour Sparfell.</p>
 </main>
 
@@ -991,7 +991,7 @@ function readP(){
 }
 function hhmm(id){var t=$(id).value;return t?(+t.split(':')[0])*60+(+t.split(':')[1]):0;}
 function readS(){
-  var off=$('i_off').value||'2026-10-09T05:30',pre=readP().pre;
+  var off=$('i_off').value||new Date().toISOString().slice(0,10)+'T05:30',pre=readP().pre;
   var om=/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)$/.exec(off);
   var posB=hhmm('i_posbefore');
   var ci=new Date(Date.UTC(+om[1],+om[2]-1,+om[3],+om[4],+om[5])-(pre+posB)*60000);
@@ -1254,6 +1254,11 @@ function autoTz(){
   pinfo.textContent=pr[2]+' · '+A.tzName(pr)+' · '+(po==null?'':offTxt(po))+' : heure locale du report';
   if(po!=null)$('i_rep').value=po;
 }
+/* À l'ouverture, le duty d'exemple est placé à la date du jour (date locale de l'appareil), heures inchangées. */
+(function(){
+  var n=new Date(),t=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
+  ['i_off','i_end'].forEach(function(id){var e=$(id),h=(e.value.split('T')[1]||'00:00');e.value=t+'T'+h;e.dispatchEvent(new Event('pk-refresh'));});
+})();
 /* Remise à zéro : toutes les saisies reviennent à leur valeur initiale (l'AOC et les paramètres de profil restent). */
 var initial=[];
 document.querySelectorAll('#f input').forEach(function(el){
